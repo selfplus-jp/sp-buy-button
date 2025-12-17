@@ -1,0 +1,320 @@
+{% if customer %}
+  <style>
+    .product-form__submit,
+    .btn--add-to-cart,
+    button[type="submit"][name="add"],
+    form[action*="/cart/add"] button[type="submit"],
+    .product-form button[type="submit"],
+    #AddToCart,
+    .add-to-cart-button,
+    [data-add-to-cart],
+    .product-single__cart-submit,
+    .product__cart-submit {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  </style>
+{% else %}
+  <style id="hide-buy-button-styles">
+    .product-form__submit,
+    .product-form__cart-submit,
+    button.product-form__cart-submit,
+    
+    /* Debut Theme */
+    .btn--add-to-cart,
+    .product-single__cart-submit,
+    
+    /* Brooklyn Theme */
+    .product__cart-submit,
+    .product__form button,
+    
+    /* General selectors */
+    button[type="submit"][name="add"],
+    input[type="submit"][name="add"],
+    form[action*="/cart/add"] button[type="submit"],
+    form[action*="/cart/add"] input[type="submit"],
+    .product-form button[type="submit"],
+    .product-form input[type="submit"],
+    #AddToCart,
+    .add-to-cart-button,
+    [data-add-to-cart],
+    form.product-form:not(.custom-buy-button-allowed) button[type="submit"],
+    .product-form__buttons button,
+    form[action*="cart"] button[type="submit"],
+    button[name="add"][type="submit"],
+    button[name="add"],
+    input[name="add"][type="submit"],
+    [name="add"],
+    
+    /* Shopify Payment Button */
+    .shopify-payment-button,
+    .shopify-payment-button__button,
+    .shopify-payment-button__button--unbranded,
+    
+    /* Express Theme */
+    .product-form__cart,
+    .product-form__cart-submit,
+    
+    /* Narrative Theme */
+    .product__submit,
+    
+    /* Supply Theme */
+    .product-single__add-to-cart,
+    
+    /* Minimal Theme */
+    .product-form__item--submit,
+    
+    /* Boundless Theme */
+    .product-form__cart-submit,
+    
+    {{ block.settings.custom_css_selector }} {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      width: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
+    }
+    
+    form[action*="/cart/add"],
+    form[action*="/cart"],
+    form[data-product-id] {
+      pointer-events: none;
+    }
+    
+    .custom-buy-button-message {
+      padding: 15px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    
+    .custom-buy-button-message .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #333;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    
+    .custom-buy-button-message .btn:hover {
+      background-color: #555;
+    }
+  </style>
+  
+  {% if block.settings.show_message %}
+    <div class="custom-buy-button-message">
+      <p>{{ block.settings.login_message | default: 'Vui lòng đăng nhập để mua sản phẩm này.' }}</p>
+      <a href="{{ routes.account_login_url }}" class="btn">{{ block.settings.login_button_text | default: 'Đăng nhập' }}</a>
+    </div>
+  {% endif %}
+  
+  <script>
+    (function() {
+      'use strict';
+      
+      if (window.hideBuyButtonInitialized) return;
+      window.hideBuyButtonInitialized = true;
+      
+      function hideBuyButtons() {
+        const cartForms = document.querySelectorAll('form[action*="/cart/add"], form[action*="/cart"], form[data-product-id]');
+        
+        cartForms.forEach(form => {
+          const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"], button[name="add"], [data-add-to-cart]');
+          submitButtons.forEach(btn => {
+            btn.style.setProperty('display', 'none', 'important');
+            btn.style.setProperty('visibility', 'hidden', 'important');
+            btn.style.setProperty('opacity', '0', 'important');
+            btn.style.setProperty('height', '0', 'important');
+            btn.style.setProperty('width', '0', 'important');
+            btn.style.setProperty('padding', '0', 'important');
+            btn.style.setProperty('margin', '0', 'important');
+            btn.style.setProperty('border', 'none', 'important');
+            btn.style.setProperty('overflow', 'hidden', 'important');
+            btn.setAttribute('disabled', 'disabled');
+            btn.setAttribute('aria-hidden', 'true');
+          });
+        });
+        
+        const selectors = [
+          // General selectors
+          'button[type="submit"][name="add"]',
+          'button[name="add"]',
+          'input[name="add"][type="submit"]',
+          'form[action*="/cart/add"] button',
+          'form[action*="/cart/add"] input[type="submit"]',
+          '.product-form button[type="submit"]',
+          '.product-form input[type="submit"]',
+          '[data-add-to-cart]',
+          '[name="add"]',
+          
+          // Dawn Theme
+          '.product-form__submit',
+          '.product-form__cart-submit',
+          'button.product-form__cart-submit',
+          
+          // Debut Theme
+          '.btn--add-to-cart',
+          '.product-single__cart-submit',
+          
+          // Brooklyn Theme
+          '.product__cart-submit',
+          '.product__form button',
+          
+          // Express Theme
+          '.product-form__cart',
+          
+          // Narrative Theme
+          '.product__submit',
+          
+          // Supply Theme
+          '.product-single__add-to-cart',
+          
+          // Minimal Theme
+          '.product-form__item--submit',
+          
+          // Shopify Payment Button
+          '.shopify-payment-button',
+          '.shopify-payment-button__button',
+          '.shopify-payment-button__button--unbranded',
+          
+          // Other common selectors
+          '#AddToCart',
+          '.add-to-cart-button',
+          '.product-form__cart-submit',
+          '.product-form__buttons button'
+        ];
+        
+        {% if block.settings.custom_css_selector != blank %}
+        selectors.push('{{ block.settings.custom_css_selector }}');
+        {% endif %}
+        
+        selectors.forEach(selector => {
+          try {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+              const form = el.closest('form');
+              const isProductForm = form && (
+                form.action.includes('/cart/add') || 
+                form.action.includes('/cart') ||
+                form.hasAttribute('data-product-id') ||
+                form.classList.contains('product-form')
+              );
+              
+              const buttonText = el.textContent?.toLowerCase() || '';
+              const isAddToCartButton = buttonText.includes('add to cart') || 
+                                       buttonText.includes('mua') || 
+                                       buttonText.includes('thêm vào giỏ') ||
+                                       buttonText.includes('buy now');
+              
+              if (isProductForm || isAddToCartButton || el.name === 'add' || el.hasAttribute('data-add-to-cart')) {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+                el.style.setProperty('opacity', '0', 'important');
+                el.setAttribute('disabled', 'disabled');
+                el.setAttribute('aria-hidden', 'true');
+              }
+            });
+          } catch(e) {
+          }
+        });
+        
+        const allButtons = document.querySelectorAll('button, input[type="submit"]');
+        allButtons.forEach(btn => {
+          const text = (btn.textContent || btn.value || '').toLowerCase();
+          const form = btn.closest('form');
+          
+          if (form && (form.action.includes('/cart') || form.classList.contains('product-form'))) {
+            if (text.includes('add to cart') || text.includes('mua') || text.includes('thêm') || btn.name === 'add') {
+              btn.style.setProperty('display', 'none', 'important');
+              btn.style.setProperty('visibility', 'hidden', 'important');
+              btn.setAttribute('disabled', 'disabled');
+            }
+          }
+        });
+      }
+      
+      hideBuyButtons();
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideBuyButtons);
+      }
+      
+      window.addEventListener('load', hideBuyButtons);
+      
+      const observer = new MutationObserver(function(mutations) {
+        let shouldHide = false;
+        mutations.forEach(function(mutation) {
+          if (mutation.addedNodes.length > 0) {
+            shouldHide = true;
+          }
+        });
+        if (shouldHide) {
+          setTimeout(hideBuyButtons, 50);
+        }
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      setTimeout(hideBuyButtons, 100);
+      setTimeout(hideBuyButtons, 300);
+      setTimeout(hideBuyButtons, 500);
+      setTimeout(hideBuyButtons, 1000);
+      setTimeout(hideBuyButtons, 2000);
+      
+      document.addEventListener('click', function() {
+        setTimeout(hideBuyButtons, 100);
+      }, true);
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Hide Buy Button",
+  "target": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_message",
+      "label": "Login Popup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "login_message",
+      "label": "Login Message",
+      "default": "Please login to buy this product."
+    },
+    {
+      "type": "text",
+      "id": "login_button_text",
+      "label": "Login Button Text",
+      "default": "Login"
+    },
+    {
+      "type": "paragraph",
+      "content": "If the buy button still shows, please inspect the element to find the class/id of the button and add it to the box below (e.g. .my-custom-button or #add-to-cart-btn)"
+    },
+    {
+      "type": "text",
+      "id": "custom_css_selector",
+      "label": "Custom CSS Selector (optional)",
+      "info": "Add custom CSS selector if your theme uses a different selector. Example: .my-buy-button, #add-to-cart"
+    }
+  ]
+}
+{% endschema %}
+
